@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!--Appender for fatal and error-->
+    <appender name="EmailNotification" class="appender.GmailAppender">
+        <param name="SMTPHost" value="smtp.gmail.com"/>
+        <param name="From" value="taras140991@gmail.com"/>
+        <param name="To" value="taras140991@gmail.com"/>
+        <param name="SMTPUsername" value="taras140991@gmail.com"/>
+        <param name="SMTPPassword" value="tarasok123"/>
+        <param name="Subject" value="Notification"/>
+        <param name="cc" value="taras140991@gmail.com"/>
+        <param name="BufferSize" value="1"/>
+        <layout class="layout.MySimpleLayout">
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="error"/>
+            <param name="LevelMax" value="fatal"/>
+            <param name="AcceptOnMatch" value="true"/>
+        </filter>
+    </appender>
+
+    <!--Appender for info and warn-->
+    <appender name="InfoFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="info.log"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
+        <layout class="org.apache.log4j.TTCCLayout">
+            <param name="DateFormat" value="ABSOLUTE"/>
+            <param name="ContextPrinting" value="false"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="info"/>
+            <param name="LevelMax" value="warn"/>
+            <param name="AcceptOnMatch" value="true"/>
+        </filter>
+    </appender>
+    
+    <!--Appender for debug-->
+    <appender name="DebugFile" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="debug.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%30c{-2}] - %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="debug"/>
+            <param name="LevelMax" value="debug"/>
+            <param name="AcceptOnMatch" value="true"/>
+        </filter>
+    </appender>
+
+    <!--Appender for trace-->
+    <appender name="TraceConsole" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%32.32c] - %m%n" />
+        </layout>
+        <param name="Encoding" value="UTF-8"/>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="trace"/>
+            <param name="LevelMax" value="trace"/>
+            <param name="AcceptOnMatch" value="true"/>
+        </filter>
+    </appender>
+
+    <root>
+        <priority value="TRACE"/>
+        <appender-ref ref="TraceConsole" />
+        <appender-ref ref="DebugFile"/>
+        <appender-ref ref="InfoFile"/>
+        <appender-ref ref="EmailNotification"/>
+    </root>
+
+</log4j:configuration>
